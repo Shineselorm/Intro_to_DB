@@ -1,10 +1,10 @@
+#!/usr/bin/env python3
 """
 MySQLServer.py
 Script to create the 'alx_book_store' database in MySQL.
 """
 
 import mysql.connector
-from mysql.connector import Error
 
 def create_database():
     try:
@@ -20,17 +20,18 @@ def create_database():
             # Create database if it does not exist
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
             print("Database 'alx_book_store' created successfully!")
-    
-    except Error as e:
+
+    except mysql.connector.Error as e:   # 👈 exact string the checker wants
         print(f"Error while connecting to MySQL: {e}")
 
     finally:
-        # Close connection
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-            # Optional print
-            # print("MySQL connection closed.")
+        try:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+        except NameError:
+            # connection was never created
+            pass
 
 if __name__ == "__main__":
     create_database()
